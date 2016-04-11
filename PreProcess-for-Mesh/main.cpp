@@ -22,7 +22,7 @@ int main()
 	int number_of_face = 0;//表面点所形成的三角形单元的数量
 	//在此加入读取文件
 	ifstream file;
-	file.open("InputFile/liver.node", ios::in);//打开节点坐标文件
+	file.open("FileIO/liver.node", ios::in);//打开节点坐标文件
 	file >> number_of_nodes;//读取节点的数量
 	//创建节点数组
 	double ** nodelist = new double*[number_of_nodes];
@@ -38,7 +38,7 @@ int main()
 			nodelist[i / 4][(i % 4) - 1] = tempd;
 	}
 	file.close();//关闭文件
-	file.open("InputFile/liver.face", ios::in);
+	file.open("FileIO/liver.face", ios::in);
 	file >> number_of_face;
 	int** facelist = new int*[number_of_face];
 	for (int i = 0; i < number_of_face; i++)
@@ -76,12 +76,21 @@ int main()
 			surfacepoint.push_back(i);
 		}
 	}
-	for (int i = 0; i < surfacepoint.size(); i++)
+	ofstream fileout;
+	fileout.open("FileIO/NodeOutput.txt", ios::out);
+	for (int i = 0, count = 0; i < surfacepoint.size(); i++)
 	{
-		if (nodelist[surfacepoint[i]][0] > 0.55)
+		if (nodelist[surfacepoint[i]][2] > 0.55)
 		{
-			cout << surfacepoint[i] << " ";
+			fileout << surfacepoint[i] << " ";
+			count++;
+		}
+		if (count / 20 != 0 && count % 20 == 0)
+		{
+			fileout << endl;
+			count = 0;
 		}
 	}
+	fileout.close();
 	cout << endl;
 }
